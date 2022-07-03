@@ -8,7 +8,8 @@ class Worldtime {
   String time = ""; //time in that location
   String flag; //url to asset flag icon
   String url; //location of url for api endpoints
- 
+  bool isDayTime = true; //show is it a day or night
+
   Worldtime({required this.location, required this.flag, required this.url});
 
   Future<void> getTime() async {
@@ -17,14 +18,16 @@ class Worldtime {
       var response = await http.get(ur);
       Map data = convert.jsonDecode(response.body);
       //get properties of datetime
-      String datetime = data['datetime'];
-      String offset = data['utc_offset'].substring(1, 3);
-
-      //creating datetime object
-      DateTime now = DateTime.parse(datetime);
-      now = now.add(Duration(hours: int.parse(offset), minutes: 30));
-      time = DateFormat.jm().format(now);
+      String datetime = data['datetime'].substring(11, 16);
+      bool isampm = int.parse(datetime.substring(0, 2)) >= 0 && int.parse(datetime.substring(0, 2)) < 12;
+      if (isampm) {
+        time = datetime + " am";
+      } else {
+        time = datetime + " pm";
+      }
+      isDayTime = int.parse(datetime.substring(0, 2)) >= 12 && int.parse(datetime.substring(0, 2)) < 20;
     } catch (e) {
+      print(e);
       time = "could not get time data";
     }
   }

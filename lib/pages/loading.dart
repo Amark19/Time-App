@@ -13,7 +13,8 @@ class _loadingState extends State<Loading> {
     Navigator.pushReplacementNamed(context, "/home", arguments: {
       'location': inst.location,
       'flag': inst.flag,
-      'time': inst.time
+      'time': inst.time,
+      'isDayTime': inst.isDayTime
     });
     // setState(() {
     //   time = inst.time;
